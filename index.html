@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Месяц к лучшей себе</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="30 дней">
+<meta name="theme-color" content="#FDF2F4">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Montserrat:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FDF2F4;
+  --surface:#FFFFFF;
+  --pink-soft:#FBE3E8;
+  --pink:#F5B8C6;
+  --pink-deep:#E87A99;
+  --rose:#D45D80;
+  --ink:#4A3038;
+  --ink-muted:#A88893;
+  --line:#F2D7DD;
+  --mint:#7FB99B;
+  --gold:#E5B54B;
+  --radius:18px;
+  --radius-sm:12px;
+  --shadow:0 2px 14px rgba(212,93,128,0.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
+button,input,textarea{font-family:inherit;}
+button:focus-visible{outline:2px solid var(--rose);outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
+
+#app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 14px 40px;}
+
+.header{text-align:center;padding:24px 10px 6px;}
+.header h1{font-size:20px;font-weight:800;letter-spacing:.02em;margin:0;text-transform:uppercase;}
+.header .script{font-family:'Caveat',cursive;font-size:22px;color:var(--rose);margin-top:2px;}
+
+.goalcard{background:var(--pink-soft);border:1.5px solid var(--pink);border-radius:var(--radius);padding:12px 16px;margin:14px 0;box-shadow:var(--shadow);}
+.goalcard label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--rose);}
+.goalcard input{width:100%;border:none;background:transparent;font-family:'Caveat',cursive;font-size:22px;color:var(--ink);padding:4px 0 0;border-bottom:1.5px dashed var(--pink);}
+.goalcard input:focus{outline:none;border-bottom-color:var(--rose);}
+
+.card{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow);}
+.card-title{display:inline-block;background:var(--pink);color:#fff;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:6px 14px;border-radius:999px;margin-bottom:12px;}
+
+.note-card{background:#FFF8E7;border:1.5px solid #F3E2B3;border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;transform:rotate(-.6deg);}
+.note-card .nt{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:8px;}
+.note-card ul{margin:0;padding-left:16px;font-family:'Caveat',cursive;font-size:19px;line-height:1.35;}
+
+.mtable{width:100%;border-collapse:collapse;font-size:12px;}
+.mtable th{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);padding:6px 4px;border-bottom:1.5px solid var(--line);text-align:center;}
+.mtable th:first-child{text-align:left;}
+.mtable td{padding:5px 3px;border-bottom:1px solid var(--line);}
+.mtable td:first-child{font-weight:600;font-size:11.5px;white-space:nowrap;}
+.mtable input{width:100%;max-width:64px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);padding:7px 4px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:center;color:var(--ink);}
+.mtable input:focus{outline:none;border-color:var(--rose);}
+.diff{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;text-align:center;white-space:nowrap;}
+.diff.down{color:var(--mint);}
+.diff.up{color:var(--rose);}
+.diff.zero{color:var(--ink-muted);}
+
+.len-row{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--ink-muted);margin-bottom:10px;flex-wrap:wrap;}
+.len-btn{border:1.5px solid var(--line);background:var(--surface);color:var(--ink-muted);font-size:12px;font-weight:700;width:34px;height:30px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+.len-btn.sel{background:var(--rose);border-color:var(--rose);color:#fff;}
+.tr-head{display:grid;grid-template-columns:34px repeat(5,1fr) 34px;gap:3px;align-items:end;margin-bottom:6px;}
+.tr-head .h{text-align:center;font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;color:var(--ink-muted);line-height:1.15;padding-bottom:2px;}
+.tr-head .h .ico{display:block;font-size:15px;margin-bottom:1px;}
+.tr-row{display:grid;grid-template-columns:34px repeat(5,1fr) 34px;gap:3px;align-items:center;padding:2.5px 0;}
+.tr-row.today-row{background:var(--pink-soft);border-radius:10px;}
+.tr-day{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--ink-muted);}
+.tr-row.today-row .tr-day{color:var(--rose);font-weight:700;}
+.heart{width:100%;height:30px;border:none;background:none;cursor:pointer;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;filter:grayscale(1) opacity(.35);transition:transform .12s ease,filter .12s ease;}
+.heart.on{filter:none;transform:scale(1.12);}
+.note-btn{width:100%;height:30px;border:none;background:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0;opacity:.35;}
+.note-btn.has{opacity:1;}
+.tr-progress{margin-top:12px;background:var(--pink-soft);border-radius:999px;height:10px;overflow:hidden;}
+.tr-progress > div{height:100%;background:linear-gradient(90deg,var(--pink),var(--rose));border-radius:999px;transition:width .3s ease;}
+.tr-progress-lbl{font-size:11px;color:var(--ink-muted);text-align:center;margin-top:6px;}
+.tr-progress-lbl b{color:var(--rose);}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mini-card{background:var(--surface);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);}
+.mini-card .ct{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--rose);margin-bottom:8px;}
+.mini-card textarea{width:100%;border:none;background:repeating-linear-gradient(transparent,transparent 27px,var(--line) 27px,var(--line) 28px);font-family:'Caveat',cursive;font-size:19px;line-height:28px;color:var(--ink);resize:none;min-height:112px;padding:0;}
+.mini-card textarea:focus{outline:none;}
+
+.footer-script{text-align:center;font-family:'Caveat',cursive;font-size:20px;color:var(--rose);margin:20px 0 8px;}
+
+.toolrow{display:flex;gap:8px;justify-content:center;margin-top:10px;}
+.tool-btn{background:var(--surface);border:1.5px solid var(--line);color:var(--ink-muted);font-size:12px;font-weight:600;padding:9px 16px;border-radius:999px;cursor:pointer;}
+.tool-btn.danger{border-color:var(--rose);color:var(--rose);}
+.tool-btn.danger.arm{background:var(--rose);color:#fff;}
+
+#splash{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:opacity .5s ease;}
+#splash.hide{opacity:0;pointer-events:none;}
+.splash-heart{font-size:52px;animation:beat 1s ease infinite;}
+@keyframes beat{0%,100%{transform:scale(1);}30%{transform:scale(1.15);}}
+.splash-title{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--rose);}
+.splash-love{font-family:'Caveat',cursive;font-size:15px;color:var(--pink);}
+.tiny-love{text-align:center;font-family:'Caveat',cursive;font-size:11px;color:var(--pink);opacity:.55;margin-top:2px;user-select:none;}
+.hist-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;cursor:pointer;width:100%;text-align:left;}
+.hist-item .hi-title{font-size:13px;font-weight:700;}
+.hist-item .hi-sub{font-size:11px;color:var(--ink-muted);margin-top:2px;}
+.hist-pct{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;color:var(--rose);flex:0 0 auto;}
+.ro-grid .heart, .ro-grid .note-btn{cursor:default;pointer-events:none;}
+.hist-note{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12.5px;margin-bottom:6px;}
+.hist-note b{color:var(--rose);font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.sheet-sub{font-family:'Caveat',cursive;font-size:19px;color:var(--rose);margin:-6px 0 10px;}
+.sheet-backdrop{position:fixed;inset:0;background:rgba(74,48,56,.35);z-index:40;}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--surface);border-radius:22px 22px 0 0;padding:10px 20px 26px;z-index:41;max-height:80vh;overflow-y:auto;box-shadow:0 -6px 24px rgba(0,0,0,.15);}
+.sheet-handle{width:38px;height:4px;background:var(--line);border-radius:2px;margin:4px auto 14px;}
+.sheet-title{font-size:16px;font-weight:700;margin-bottom:12px;}
+.sheet textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);padding:12px;font-size:15px;color:var(--ink);min-height:100px;resize:vertical;}
+.sheet textarea:focus{outline:none;border-color:var(--rose);}
+.btn-primary{background:linear-gradient(135deg,var(--pink-deep),var(--rose));color:#fff;border:none;padding:13px 22px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;width:100%;margin-top:14px;}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="splash-heart">💗</div>
+  <div class="splash-title">Месяц к лучшей себе</div>
+  <div class="splash-love">сделано с любовью для Маши ♡</div>
+</div>
+<div id="app">
+  <div class="header">
+    <h1>Трекер похудения и спорта</h1>
+    <div class="script">Месяц к лучшей себе! ♡</div>
+  </div>
+
+  <div class="goalcard">
+    <label>Цель месяца</label>
+    <input id="goalInput" type="text" placeholder="Напиши свою цель…">
+  </div>
+
+  <div class="note-card">
+    <div class="nt">Напоминание ♡</div>
+    <ul>
+      <li>Ты сильнее, чем думаешь</li>
+      <li>Маленькие шаги каждый день дают большой результат</li>
+      <li>Фокус на себе и своём прогрессе</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="card-title">Мои измерения</span>
+    <div id="measureBlock"></div>
+  </div>
+
+  <div class="card">
+    <span class="card-title">Ежедневный трекер</span>
+    <div id="trackerBlock"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="ct">Моя награда 🎁</div>
+      <textarea id="rewardInput" placeholder="За что себя порадую…"></textarea>
+    </div>
+    <div class="mini-card">
+      <div class="ct">Мотивация месяца ♡</div>
+      <textarea id="motivationInput" placeholder="Зачем мне это…"></textarea>
+    </div>
+  </div>
+
+  <div class="footer-script">Ты не должна быть идеальной, чтобы быть лучшей версией себя! ♡</div>
+  <div class="tiny-love" title="я люблю Машу">м ♡</div>
+
+  <div class="toolrow">
+    <button class="tool-btn" onclick="exportData()">Экспорт</button>
+    <label class="tool-btn" style="cursor:pointer;">Импорт<input type="file" accept="application/json" style="display:none" onchange="importDataFile(this)"></label>
+    <button class="tool-btn" onclick="openHistory()">История 📚</button>
+    <button class="tool-btn danger" id="resetBtn" onclick="finishCycle()">Завершить цикл</button>
+  </div>
+
+  <div id="modalRoot"></div>
+</div>
+
+<script>
+'use strict';
+
+var STORAGE_KEY = 'thirty_days_v1';
+var HABITS = [
+  {key:'gym',    label:'Зал',         ico:'🏋️'},
+  {key:'stretch',label:'Растяжка',    ico:'🤸'},
+  {key:'nosweet',label:'Без сладкого',ico:'🚫🍬'},
+  {key:'noflour',label:'Без мучного', ico:'🚫🥐'},
+  {key:'water',  label:'Вода 1,5–2 л',ico:'💧'}
+];
+var PARAMS = [
+  {key:'weight', label:'Вес (кг)'},
+  {key:'waist',  label:'Талия (см)'},
+  {key:'hips',   label:'Бёдра (см)'},
+  {key:'thighL', label:'Ляшка левая (см)'},
+  {key:'thighR', label:'Ляшка правая (см)'},
+  {key:'chest',  label:'Грудь (см)'}
+];
+
+var state = loadState();
+var ui = { noteDay: null, resetArmed: false, histOpen: false, histView: null };
+
+function freshState(len){
+  len = len || 31;
+  var days = [];
+  for(var i=0;i<len;i++) days.push({gym:false,stretch:false,nosweet:false,noflour:false,water:false,note:''});
+  var meas = {};
+  PARAMS.forEach(function(p){ meas[p.key] = {d1:'', d15:'', d30:''}; });
+  return { goal:'', reward:'', motivation:'', days:days, meas:meas, len:len, startedAt:new Date().toISOString().slice(0,10), history:[] };
+}
+function loadState(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      var p = JSON.parse(raw);
+      if(p && Array.isArray(p.days) && p.days.length>=28 && p.days.length<=31 && p.meas){
+        if(!p.len) p.len = p.days.length;
+        if(!Array.isArray(p.history)) p.history = [];
+        while(p.days.length < p.len) p.days.push({gym:false,stretch:false,nosweet:false,noflour:false,water:false,note:''});
+        return p;
+      }
+    }
+  }catch(e){}
+  return freshState();
+}
+function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+
+function currentDayIndex(){
+  var start = new Date(state.startedAt+'T00:00:00');
+  var now = new Date();
+  var diff = Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate()) - start)/86400000);
+  if(diff<0) diff=0; if(diff>state.len-1) diff=state.len-1;
+  return diff;
+}
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+// ---------- измерения ----------
+function renderMeasures(){
+  var rows = PARAMS.map(function(p){
+    var m = state.meas[p.key];
+    var d1 = parseFloat(String(m.d1).replace(',','.'));
+    var d30 = parseFloat(String(m.d30).replace(',','.'));
+    var diffHtml = '<span class="diff zero">—</span>';
+    if(!isNaN(d1) && !isNaN(d30)){
+      var diff = Math.round((d30-d1)*10)/10;
+      if(diff<0) diffHtml = '<span class="diff down">▼ '+Math.abs(diff)+'</span>';
+      else if(diff>0) diffHtml = '<span class="diff up">▲ '+diff+'</span>';
+      else diffHtml = '<span class="diff zero">＝</span>';
+    }
+    return '<tr><td>'+p.label+'</td>'+
+      '<td><input inputmode="decimal" value="'+escapeHtml(String(m.d1))+'" onchange="setMeas(\''+p.key+'\',\'d1\',this.value)"></td>'+
+      '<td><input inputmode="decimal" value="'+escapeHtml(String(m.d15))+'" onchange="setMeas(\''+p.key+'\',\'d15\',this.value)"></td>'+
+      '<td><input inputmode="decimal" value="'+escapeHtml(String(m.d30))+'" onchange="setMeas(\''+p.key+'\',\'d30\',this.value)"></td>'+
+      '<td>'+diffHtml+'</td></tr>';
+  }).join('');
+  document.getElementById('measureBlock').innerHTML =
+    '<table class="mtable"><thead><tr><th>Параметры</th><th>День 1<br>старт</th><th>День 15</th><th>День '+state.len+'<br>финиш</th><th>Итог</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function setMeas(key, col, val){
+  state.meas[key][col] = val.trim();
+  saveState();
+  renderMeasures();
+}
+
+// ---------- ежедневный трекер ----------
+function renderTracker(){
+  var todayIdx = currentDayIndex();
+  var lenRow = '<div class="len-row">Дней в цикле: '+
+    [28,29,30,31].map(function(n){
+      return '<button class="len-btn'+(state.len===n?' sel':'')+'" onclick="setLen('+n+')">'+n+'</button>';
+    }).join('')+'</div>';
+  var head = '<div class="tr-head"><div class="h">День</div>'+
+    HABITS.map(function(h){ return '<div class="h"><span class="ico">'+h.ico+'</span>'+h.label+'</div>'; }).join('')+
+    '<div class="h"><span class="ico">📝</span></div></div>';
+
+  var rows = '';
+  var totalDone = 0, totalCells = state.len*HABITS.length;
+  for(var i=0;i<state.len;i++){
+    var d = state.days[i];
+    var cells = HABITS.map(function(h){
+      if(d[h.key]) totalDone++;
+      return '<button class="heart'+(d[h.key]?' on':'')+'" onclick="toggleCell('+i+',\''+h.key+'\')" aria-label="'+h.label+'">💗</button>';
+    }).join('');
+    rows += '<div class="tr-row'+(i===todayIdx?' today-row':'')+'">'+
+      '<div class="tr-day">'+(i+1)+'</div>'+cells+
+      '<button class="note-btn'+(d.note?' has':'')+'" onclick="openNote('+i+')" aria-label="Заметка">📝</button>'+
+      '</div>';
+  }
+  var pct = Math.round(totalDone/totalCells*100);
+  var progress = '<div class="tr-progress"><div style="width:'+pct+'%"></div></div>'+
+    '<div class="tr-progress-lbl">Выполнено <b>'+totalDone+'</b> из '+totalCells+' · <b>'+pct+'%</b> · сегодня день <b>'+(todayIdx+1)+'</b></div>';
+  document.getElementById('trackerBlock').innerHTML = lenRow + head + rows + progress;
+}
+function setLen(n){
+  if(n===state.len) return;
+  if(n > state.days.length){
+    while(state.days.length < n) state.days.push({gym:false,stretch:false,nosweet:false,noflour:false,water:false,note:''});
+  }
+  state.len = n;
+  saveState();
+  renderTracker();
+  renderMeasures();
+}
+function toggleCell(i, key){
+  state.days[i][key] = !state.days[i][key];
+  saveState();
+  renderTracker();
+}
+
+// ---------- заметки ----------
+function openNote(i){ ui.noteDay = i; renderModal(); }
+function closeNote(){ ui.noteDay = null; renderModal(); }
+function saveNote(){
+  var ta = document.getElementById('noteTa');
+  if(ta && ui.noteDay!==null){
+    state.days[ui.noteDay].note = ta.value.trim();
+    saveState();
+  }
+  ui.noteDay = null;
+  renderModal();
+  renderTracker();
+}
+function renderModal(){
+  var root = document.getElementById('modalRoot');
+  if(ui.histOpen){
+    root.innerHTML = (ui.histView===null) ? renderHistList() : renderHistView();
+    return;
+  }
+  if(ui.noteDay===null){ root.innerHTML=''; return; }
+  var d = state.days[ui.noteDay];
+  root.innerHTML = '<div class="sheet-backdrop" onclick="closeNote()"></div>'+
+    '<div class="sheet"><div class="sheet-handle"></div>'+
+    '<div class="sheet-title">День '+(ui.noteDay+1)+' — заметка / самочувствие</div>'+
+    '<textarea id="noteTa" placeholder="Как прошёл день, самочувствие, что получилось…">'+escapeHtml(d.note)+'</textarea>'+
+    '<button class="btn-primary" onclick="saveNote()">Сохранить</button></div>';
+}
+
+// ---------- текстовые поля ----------
+function bindTextFields(){
+  var g = document.getElementById('goalInput');
+  var r = document.getElementById('rewardInput');
+  var m = document.getElementById('motivationInput');
+  g.value = state.goal; r.value = state.reward; m.value = state.motivation;
+  g.onchange = function(){ state.goal = g.value; saveState(); };
+  r.onchange = function(){ state.reward = r.value; saveState(); };
+  m.onchange = function(){ state.motivation = m.value; saveState(); };
+}
+
+// ---------- завершение цикла ----------
+function cyclePct(days, len, upto){
+  var n = Math.min(len, days.length);
+  var done = 0;
+  for(var i=0;i<n;i++){ HABITS.forEach(function(h){ if(days[i][h.key]) done++; }); }
+  return Math.round(done/(n*HABITS.length)*100);
+}
+function fmtDate(iso){
+  if(!iso) return '';
+  var p = iso.split('-');
+  var M = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  return parseInt(p[2],10)+' '+M[parseInt(p[1],10)-1]+' '+p[0];
+}
+function finishCycle(){
+  var btn = document.getElementById('resetBtn');
+  if(!ui.resetArmed){
+    ui.resetArmed = true;
+    btn.classList.add('arm');
+    btn.textContent = 'Сохранить в историю и начать новый?';
+    setTimeout(function(){
+      if(ui.resetArmed){ ui.resetArmed=false; btn.classList.remove('arm'); btn.textContent='Завершить цикл'; }
+    }, 5000);
+    return;
+  }
+  ui.resetArmed = false;
+  var snapshot = {
+    goal: state.goal, reward: state.reward, motivation: state.motivation,
+    days: state.days.slice(0, state.len), meas: JSON.parse(JSON.stringify(state.meas)),
+    len: state.len, startedAt: state.startedAt,
+    finishedAt: new Date().toISOString().slice(0,10)
+  };
+  var hist = state.history || [];
+  hist.unshift(snapshot);
+  state = freshState(state.len);
+  state.history = hist;
+  saveState();
+  btn.classList.remove('arm');
+  btn.textContent = 'Завершить цикл';
+  bindTextFields();
+  renderMeasures();
+  renderTracker();
+  openHistory();
+}
+
+// ---------- история ----------
+function openHistory(){ ui.histOpen = true; ui.histView = null; renderModal(); }
+function closeHistory(){ ui.histOpen = false; ui.histView = null; renderModal(); }
+function viewHist(i){ ui.histView = i; renderModal(); }
+function backToHistList(){ ui.histView = null; renderModal(); }
+
+function renderHistList(){
+  var items = '';
+  if(!state.history.length){
+    items = '<div style="text-align:center;color:var(--ink-muted);font-size:13px;padding:26px 0;">Пока пусто — завершённые циклы появятся здесь 🌸</div>';
+  } else {
+    items = state.history.map(function(c, i){
+      var pct = cyclePct(c.days, c.len);
+      var w1 = parseFloat(String(c.meas.weight.d1).replace(',','.'));
+      var w2 = parseFloat(String(c.meas.weight.d30).replace(',','.'));
+      var wtxt = (!isNaN(w1) && !isNaN(w2)) ? ' · вес '+(w2<w1?'−':'+')+Math.abs(Math.round((w2-w1)*10)/10)+' кг' : '';
+      return '<button class="hist-item" onclick="viewHist('+i+')">'+
+        '<span><span class="hi-title">'+(c.goal ? escapeHtml(c.goal) : 'Цикл '+c.len+' дней')+'</span>'+
+        '<span class="hi-sub" style="display:block;">'+fmtDate(c.startedAt)+' — '+fmtDate(c.finishedAt)+wtxt+'</span></span>'+
+        '<span class="hist-pct">'+pct+'%</span></button>';
+    }).join('');
+  }
+  return '<div class="sheet-backdrop" onclick="closeHistory()"></div>'+
+    '<div class="sheet"><div class="sheet-handle"></div>'+
+    '<div class="sheet-title">История циклов 📚</div>'+items+
+    '<button class="btn-primary" onclick="closeHistory()">Закрыть</button></div>';
+}
+
+function renderHistView(){
+  var c = state.history[ui.histView];
+  if(!c) return renderHistList();
+  var pct = cyclePct(c.days, c.len);
+
+  var mrows = PARAMS.map(function(pp){
+    var m = c.meas[pp.key];
+    var d1 = parseFloat(String(m.d1).replace(',','.'));
+    var d30 = parseFloat(String(m.d30).replace(',','.'));
+    var diffHtml = '<span class="diff zero">—</span>';
+    if(!isNaN(d1) && !isNaN(d30)){
+      var diff = Math.round((d30-d1)*10)/10;
+      if(diff<0) diffHtml = '<span class="diff down">▼ '+Math.abs(diff)+'</span>';
+      else if(diff>0) diffHtml = '<span class="diff up">▲ '+diff+'</span>';
+      else diffHtml = '<span class="diff zero">＝</span>';
+    }
+    return '<tr><td>'+pp.label+'</td><td style="text-align:center;">'+escapeHtml(String(m.d1)||'—')+'</td>'+
+      '<td style="text-align:center;">'+escapeHtml(String(m.d15)||'—')+'</td>'+
+      '<td style="text-align:center;">'+escapeHtml(String(m.d30)||'—')+'</td><td>'+diffHtml+'</td></tr>';
+  }).join('');
+
+  var head = '<div class="tr-head"><div class="h">День</div>'+
+    HABITS.map(function(h){ return '<div class="h"><span class="ico">'+h.ico+'</span>'+h.label+'</div>'; }).join('')+
+    '<div class="h"><span class="ico">📝</span></div></div>';
+  var rows = '';
+  for(var i=0;i<c.days.length;i++){
+    var d = c.days[i];
+    rows += '<div class="tr-row"><div class="tr-day">'+(i+1)+'</div>'+
+      HABITS.map(function(h){ return '<button class="heart'+(d[h.key]?' on':'')+'">💗</button>'; }).join('')+
+      '<button class="note-btn'+(d.note?' has':'')+'">📝</button></div>';
+  }
+
+  var notes = c.days.map(function(d,i){ return d.note ? '<div class="hist-note"><b>День '+(i+1)+':</b> '+escapeHtml(d.note)+'</div>' : ''; }).join('');
+  var notesBlock = notes ? '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--rose);margin:14px 0 8px;">Заметки</div>'+notes : '';
+
+  return '<div class="sheet-backdrop" onclick="closeHistory()"></div>'+
+    '<div class="sheet"><div class="sheet-handle"></div>'+
+    '<div class="sheet-title">'+(c.goal ? escapeHtml(c.goal) : 'Цикл '+c.len+' дней')+'</div>'+
+    '<div class="sheet-sub">'+fmtDate(c.startedAt)+' — '+fmtDate(c.finishedAt)+' · выполнено '+pct+'%</div>'+
+    '<table class="mtable" style="margin-bottom:14px;"><thead><tr><th>Параметры</th><th>Старт</th><th>Д.15</th><th>Финиш</th><th>Итог</th></tr></thead><tbody>'+mrows+'</tbody></table>'+
+    '<div class="ro-grid">'+head+rows+'</div>'+
+    notesBlock+
+    (c.reward ? '<div class="hist-note" style="margin-top:12px;"><b>Награда:</b> '+escapeHtml(c.reward)+'</div>' : '')+
+    (c.motivation ? '<div class="hist-note"><b>Мотивация:</b> '+escapeHtml(c.motivation)+'</div>' : '')+
+    '<button class="btn-primary" onclick="backToHistList()">← К списку</button></div>';
+}
+
+// ---------- бэкап ----------
+function exportData(){
+  var blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '30days-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importDataFile(input){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var p = JSON.parse(e.target.result);
+      if(p && Array.isArray(p.days) && p.days.length>=28 && p.days.length<=31 && p.meas){
+        if(!p.len) p.len = p.days.length;
+        if(!Array.isArray(p.history)) p.history = [];
+        state = p; saveState();
+        bindTextFields(); renderMeasures(); renderTracker();
+      } else alert('Файл повреждён или неверного формата');
+    }catch(err){ alert('Не удалось прочитать файл'); }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+bindTextFields();
+renderMeasures();
+renderTracker();
+
+setTimeout(function(){
+  var sp = document.getElementById('splash');
+  if(sp) sp.classList.add('hide');
+}, 1400);
+try{ console.log('%c я люблю Машу \u2661 ', 'color:#E87A99;font-size:14px;font-family:cursive;'); }catch(e){}
+</script>
+</body>
+</html>
